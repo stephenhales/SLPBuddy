@@ -10,33 +10,26 @@ export class WebpageService {
   // Use of this source code is governed by a BSD-style license that can be
   // found in the LICENSE file.
 
-  getFormInputsScript() {
-    var inputs = window.document.getElementsByTagName('input');
-    //(<HTMLInputElement>window.frames[5].document.getElementById('FIE_COM_ParentTeacherInformation')).value = 'new text';
-    console.log(inputs);
-  }
-
-  getFormInputsOld() {
-    var inputs;
-    var nodeList;
-
-    nodeList = document.getElementsByTagName('input');
-    inputs = [].slice.call(nodeList);
-    console.log(inputs);
-    return inputs;
-  }
-
-  getFormInputs() {
-    var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    var scriptString = "";
-
-    scriptString = Function.prototype.toString.call(this.getFormInputsScript);
-
+  getFormInputs(callback) {
+    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
     chrome.tabs.executeScript({
       //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
-      code: '('+ scriptString +')();'
+      code: `
+        var htmlCollection = window.document.getElementsByTagName('input');
+        var inputs = Array.from(htmlCollection);
+        var items = [];
+
+        inputs.forEach(function(input) {
+          var item = (({name, id, value, type}) => ({name, id, value, type}))(input);
+          items.push(item);
+        });
+        console.log(htmlCollection);
+        console.log(items);
+        items`
     }, function(result){
+      console.log("Service-getFormInputs")
       console.log(result[0]);
+      callback(result[0]);
     });
   }
 
@@ -55,13 +48,14 @@ export class WebpageService {
     });
   }
 
-  changeBackgroundColor(color) {
+  setBackgroundColor(color) {
     var someVar = "";
     var scriptBackground = 'document.body.style.backgroundColor="' + color + '";';
 
     chrome.tabs.executeScript({
       code:  scriptBackground
     }, function(result){
+      console.log("Service-setBackgroundColor")
       console.log(result);
     });
   }
