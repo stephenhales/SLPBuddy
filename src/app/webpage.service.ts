@@ -10,33 +10,27 @@ export class WebpageService {
   // Use of this source code is governed by a BSD-style license that can be
   // found in the LICENSE file.
 
-  getFormInputsScript() {
-    var inputs = window.document.getElementsByTagName('input');
-    //(<HTMLInputElement>window.frames[5].document.getElementById('FIE_COM_ParentTeacherInformation')).value = 'new text';
-    console.log(inputs);
-  }
-
-  getFormInputsOld() {
-    var inputs;
-    var nodeList;
-
-    nodeList = document.getElementsByTagName('input');
-    inputs = [].slice.call(nodeList);
-    console.log(inputs);
-    return inputs;
-  }
-
-  getFormInputs() {
+  getFormInputs(callback) {
     var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    var scriptString = "";
+    var scriptString = '';
 
-    scriptString = Function.prototype.toString.call(this.getFormInputsScript);
+    var getFormInputsScript = function() {
+      var nodeList = window.document.getElementsByTagName('input');
+      console.log(nodeList);
 
+      var value = nodeList[0].name;
+      console.log(value);
+      value
+    }
+
+    scriptString = Function.prototype.toString.call(getFormInputsScript);
     chrome.tabs.executeScript({
       //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
       code: '('+ scriptString +')();'
     }, function(result){
-      console.log(result[0]);
+      console.log("Service-getFormInputs")
+      console.log(result);
+      callback(result);
     });
   }
 
@@ -55,13 +49,14 @@ export class WebpageService {
     });
   }
 
-  changeBackgroundColor(color) {
+  setBackgroundColor(color) {
     var someVar = "";
     var scriptBackground = 'document.body.style.backgroundColor="' + color + '";';
 
     chrome.tabs.executeScript({
       code:  scriptBackground
     }, function(result){
+      console.log("Service-setBackgroundColor")
       console.log(result);
     });
   }

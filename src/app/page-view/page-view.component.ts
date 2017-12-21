@@ -10,16 +10,26 @@ import { Input } from '../input';
 export class PageViewComponent implements OnInit {
   inputs: Input;
 
-  constructor(private webpageService:WebpageService) { }
+  constructor(private webpageService:WebpageService) {}
 
   ngOnInit() {
     var vm = this;
-
     vm.webpageService.getCurrentTabUrl((url) => {
       var savedColor = "grey";
+      vm.webpageService.setBackgroundColor(savedColor);
 
-      vm.webpageService.changeBackgroundColor(savedColor);
-      vm.webpageService.getFormInputs();
+      vm.nodeListToArray();
+    });
+  }
+
+  nodeListToArray(){
+    var inputs;
+    var nodeList;
+
+    this.webpageService.getFormInputs((nodeList) => {
+      inputs = [].slice.call(nodeList);
+      console.log("page-view:");
+      console.log(inputs);
     });
   }
 }
