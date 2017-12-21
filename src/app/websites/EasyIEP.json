@@ -1,0 +1,18 @@
+{
+  "title": "EasyIEP",
+  "url": "https://tx.pcgeducation.com/easyiep",
+  "website": {
+    "pages": [{
+        "title": "Communicative Status",
+        "sections": {
+          "name": "frame1",
+          "inputs": [
+            {"label": "Home Language Survey", "type":"checkbox", "name": "FIE_COM_SOD_Selector_HLS" },
+            {"label": "LPAC", "type":"checkbox" , "name": "FIE_COM_SOD_Selector_LPAC"},
+            {"label": "TELPAS", "type":"checkbox" , "name": "FIE_COM_SOD_Selector_LPAC"}
+          ]
+        }
+      }
+    ]
+  }
+}
