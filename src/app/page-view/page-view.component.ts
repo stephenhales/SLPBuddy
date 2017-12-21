@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebpageService } from '../webpage.service';
-import { Input } from '../input';
+//import { Input } from '../input';
 
 @Component({
   selector: 'app-page-view',
@@ -8,28 +8,35 @@ import { Input } from '../input';
   styleUrls: ['./page-view.component.css']
 })
 export class PageViewComponent implements OnInit {
-  inputs: Input;
+  inputs = [{
+    id: "demo id",
+    name: "demo name",
+    value: "demo value",
+    type: "checkbox"
+  }];
 
-  constructor(private webpageService:WebpageService) {}
+  constructor(private WebpageService:WebpageService) {}
 
   ngOnInit() {
     var vm = this;
-    vm.webpageService.getCurrentTabUrl((url) => {
-      var savedColor = "grey";
-      vm.webpageService.setBackgroundColor(savedColor);
-
+    vm.WebpageService.getCurrentTabUrl((url) => {
+      vm.setColor();
       vm.nodeListToArray();
     });
   }
 
   nodeListToArray(){
-    var inputs;
     var nodeList;
 
-    this.webpageService.getFormInputs((nodeList) => {
-      inputs = [].slice.call(nodeList);
+    this.WebpageService.getFormInputs((items) => {
       console.log("page-view:");
-      console.log(inputs);
+      console.log(items);
+      this.inputs = items;
     });
+  }
+
+  setColor(){
+    var savedColor = "grey";
+    this.WebpageService.setBackgroundColor(savedColor);
   }
 }

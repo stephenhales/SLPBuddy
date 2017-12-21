@@ -11,26 +11,25 @@ export class WebpageService {
   // found in the LICENSE file.
 
   getFormInputs(callback) {
-    var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    var scriptString = '';
-
-    var getFormInputsScript = function() {
-      var nodeList = window.document.getElementsByTagName('input');
-      console.log(nodeList);
-
-      var value = nodeList[0].name;
-      console.log(value);
-      value
-    }
-
-    scriptString = Function.prototype.toString.call(getFormInputsScript);
+    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
     chrome.tabs.executeScript({
       //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
-      code: '('+ scriptString +')();'
+      code: `
+        var htmlCollection = window.document.getElementsByTagName('input');
+        var inputs = Array.from(htmlCollection);
+        var items = [];
+
+        inputs.forEach(function(input) {
+          var item = (({name, id, value, type}) => ({name, id, value, type}))(input);
+          items.push(item);
+        });
+        console.log(htmlCollection);
+        console.log(items);
+        items`
     }, function(result){
       console.log("Service-getFormInputs")
-      console.log(result);
-      callback(result);
+      console.log(result[0]);
+      callback(result[0]);
     });
   }
 
