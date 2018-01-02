@@ -26,7 +26,8 @@ export class WebpageService {
         console.log(htmlCollection);
         console.log(items);
         items`
-    }, function(result){
+    },
+    function(result){
       console.log("Service-getFormInputs")
       console.log(result[0]);
       callback(result[0]);
