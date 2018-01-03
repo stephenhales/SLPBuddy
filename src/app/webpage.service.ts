@@ -21,7 +21,9 @@ export class WebpageService {
 
         inputs.forEach(function(input) {
           var item = (({name, id, value, type}) => ({name, id, value, type}))(input);
-          items.push(item);
+          if(item.type == 'text') {
+            items.push(item);
+          }
         });
         console.log(htmlCollection);
         console.log(items);
@@ -61,17 +63,7 @@ export class WebpageService {
     });
   }
 
-  // //TODO
-  // getSavedBackgroundColor(url, callback) {
-  //   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  //   // for chrome.runtime.lastError to ensure correctness even when the API call
-  //   // fails.
-  //   chrome.storage.sync.get(url, (items) => {
-  //     callback(chrome.runtime.lastError ? null : items[url]);
-  //   });
-  // }
-  //
-  // //TODO
+  //DEMO
   // saveBackgroundColor(url, color) {
   //   var items = {};
   //   items[url] = color;
@@ -81,7 +73,36 @@ export class WebpageService {
   //   chrome.storage.sync.set(items);
   // }
 
-  //TODO
+  saveTemplate(url, text) {
+    var items = {};
+    items[url] = text;
+    // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
+    // optional callback since we don't need to perform any action once the
+    // background color is saved.
+    chrome.storage.sync.set(items);
+  }
+
+  //DEMO
+  // getSavedBackgroundColor(url, callback) {
+  //   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+  //   // for chrome.runtime.lastError to ensure correctness even when the API call
+  //   // fails.
+  //   chrome.storage.sync.get(url, (items) => {
+  //     callback(chrome.runtime.lastError ? null : items[url]);
+  //   });
+  // }
+
+  getSavedTemplates(url, callback) {
+    // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+    // for chrome.runtime.lastError to ensure correctness even when the API call
+    // fails.
+    chrome.storage.sync.get(url, (items) => {
+      callback(chrome.runtime.lastError ? null : items[url]);
+      console.log("Service-get saved input:");
+      console.log(items[url]);
+    });
+  }
+
   // this.getSavedBackgroundColor(url, (savedColor) => {
   //   if (savedColor) {
   //     this.changeBackgroundColor(savedColor);

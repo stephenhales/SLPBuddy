@@ -1,7 +1,16 @@
 <h2>My Inputs</h2>
-<ul class="page-view">
-  <li *ngFor="let input of inputs">
-    <span>{{input.value}} {{input.name}} {{input.type}}</span>
-    <input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}">
-  </li>
-</ul>
+<div class="page-view">
+  <input type="button" id="edit_templates" name="edit_templates" value="edit templates">
+  <table>
+    <tr>
+      <th>Value</th>
+      <th>Input</th>
+    </tr>
+    <tr *ngFor="let input of inputs">
+      <span *ngIf="(input.type == 'text')">
+        <td>{{input.name}}</td>
+        <td><input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}"></td>
+      </span>
+    </tr>
+  </table>
+</div>

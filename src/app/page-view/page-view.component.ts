@@ -18,6 +18,8 @@ export class PageViewComponent implements OnInit {
     vm.WebpageService.getCurrentTabUrl((url) => {
       //vm.setColor();
       vm.getFormInputs();
+      vm.saveTemplate(url, "demo this works");
+      vm.getSavedTemplates(url);
     });
 
     //This allows the data to appear. it seems like there is an async issue.
@@ -37,6 +39,16 @@ export class PageViewComponent implements OnInit {
   setColor(){
     var savedColor = "grey";
     this.WebpageService.setBackgroundColor(savedColor);
+  }
+
+  saveTemplate(url, text){
+    this.WebpageService.saveTemplate(url, text);
+  }
+
+  getSavedTemplates(url) {
+    this.WebpageService.getSavedTemplates(url, (items) => {
+      console.log(items);
+    });
   }
 
   delay(ms: number) {
