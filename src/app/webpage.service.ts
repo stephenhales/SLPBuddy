@@ -10,6 +10,28 @@ export class WebpageService {
   // Use of this source code is governed by a BSD-style license that can be
   // found in the LICENSE file.
 
+  getFormTextAreas(callback) {
+    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
+    chrome.tabs.executeScript({
+      //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
+      code: `
+        var htmlCollection = window.document.getElementsByTagName('textarea');
+        var inputs = Array.from(htmlCollection);
+        var items = [];
+
+        inputs.forEach(function(input) {
+          var item = (({name, id}) => ({name, id}))(input);
+          items.push(item);
+        });
+        console.log(htmlCollection);
+        console.log(items);
+        items`
+    },
+    function(result){
+      callback(result[0]);
+    });
+  }
+
   getFormInputs(callback) {
     //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
     chrome.tabs.executeScript({
@@ -21,17 +43,13 @@ export class WebpageService {
 
         inputs.forEach(function(input) {
           var item = (({name, id, value, type}) => ({name, id, value, type}))(input);
-          if(item.type == 'text') {
-            items.push(item);
-          }
+          items.push(item);
         });
         console.log(htmlCollection);
         console.log(items);
         items`
     },
     function(result){
-      console.log("Service-getFormInputs")
-      console.log(result[0]);
       callback(result[0]);
     });
   }

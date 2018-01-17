@@ -1,5 +1,5 @@
-<h2>My Inputs</h2>
 <div class="page-view">
+  <h2>Page Inputs</h2>
   <input type="button" id="edit_templates" name="edit_templates" value="edit templates">
   <table>
     <tr>
@@ -7,10 +7,20 @@
       <th>Input</th>
     </tr>
     <tr *ngFor="let input of inputs">
-      <span *ngIf="(input.type == 'text')">
-        <td>{{input.name}}</td>
-        <td><input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}"></td>
-      </span>
+      <td>{{input.name}}</td>
+      <td>{{input.type}}</td>
+      <td><input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}"></td>
+    </tr>
+  </table>
+  <h2>Page Text Areas</h2>
+  <table>
+    <tr>
+      <th>Value</th>
+      <th>Input</th>
+    </tr>
+    <tr *ngFor="let textarea of textareas">
+      <td>{{textarea.name}}</td>
+      <td>{{textarea.id}}</td>
     </tr>
   </table>
 </div>

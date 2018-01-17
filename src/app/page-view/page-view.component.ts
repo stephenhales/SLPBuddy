@@ -10,6 +10,7 @@ import { WebpageService } from '../webpage.service';
 export class PageViewComponent implements OnInit {
 
   inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
+  textareas: any[] = [{id: "demo id",name: "demo name"}];
 
   constructor(private WebpageService:WebpageService) {}
 
@@ -18,6 +19,7 @@ export class PageViewComponent implements OnInit {
     vm.WebpageService.getCurrentTabUrl((url) => {
       //vm.setColor();
       vm.getFormInputs();
+      vm.getFormTextAreas();
       vm.saveTemplate(url, "demo this works");
       vm.getSavedTemplates(url);
     });
@@ -27,12 +29,21 @@ export class PageViewComponent implements OnInit {
   }
 
   getFormInputs(){
-    console.log("page-view:");
-    console.log(this.inputs);
     this.WebpageService.getFormInputs((inputs) => {
-      this.inputs = inputs;
-      console.log("Controller-GetformInputs");
-      console.log(this.inputs);
+      var filteredInputs = [];
+      inputs.forEach(function(input) {
+        if(input.type != 'hidden')
+        {
+          filteredInputs.push(input);
+        }
+      });
+      this.inputs = filteredInputs;
+    });
+  }
+
+  getFormTextAreas(){
+    this.WebpageService.getFormTextAreas((textareas) => {
+      this.textareas = textareas;
     });
   }
 
