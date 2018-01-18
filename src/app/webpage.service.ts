@@ -76,20 +76,9 @@ export class WebpageService {
     chrome.tabs.executeScript({
       code:  scriptBackground
     }, function(result){
-      console.log("Service-setBackgroundColor")
       console.log(result);
     });
   }
-
-  //DEMO
-  // saveBackgroundColor(url, color) {
-  //   var items = {};
-  //   items[url] = color;
-  //   // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
-  //   // optional callback since we don't need to perform any action once the
-  //   // background color is saved.
-  //   chrome.storage.sync.set(items);
-  // }
 
   saveTemplate(url, text) {
     var items = {};
@@ -98,17 +87,8 @@ export class WebpageService {
     // optional callback since we don't need to perform any action once the
     // background color is saved.
     chrome.storage.sync.set(items);
+    console.log("saved: " + items[url]);
   }
-
-  //DEMO
-  // getSavedBackgroundColor(url, callback) {
-  //   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  //   // for chrome.runtime.lastError to ensure correctness even when the API call
-  //   // fails.
-  //   chrome.storage.sync.get(url, (items) => {
-  //     callback(chrome.runtime.lastError ? null : items[url]);
-  //   });
-  // }
 
   getSavedTemplates(url, callback) {
     // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
@@ -116,8 +96,6 @@ export class WebpageService {
     // fails.
     chrome.storage.sync.get(url, (items) => {
       callback(chrome.runtime.lastError ? null : items[url]);
-      console.log("Service-get saved input:");
-      console.log(items[url]);
     });
   }
 

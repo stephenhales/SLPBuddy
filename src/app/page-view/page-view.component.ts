@@ -11,6 +11,8 @@ export class PageViewComponent implements OnInit {
 
   inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
   textareas: any[] = [{id: "demo id",name: "demo name"}];
+  template: string = "";
+  url: string = "";
 
   constructor(private WebpageService:WebpageService) {}
 
@@ -18,10 +20,11 @@ export class PageViewComponent implements OnInit {
     var vm = this;
     vm.WebpageService.getCurrentTabUrl((url) => {
       //vm.setColor();
+      vm.url = url;
       vm.getFormInputs();
       vm.getFormTextAreas();
-      vm.saveTemplate(url, "demo this works");
-      vm.getSavedTemplates(url);
+      vm.saveTemplate(vm.url, "demo this works");
+      vm.getSavedTemplates(vm.url);
     });
 
     //This allows the data to appear. it seems like there is an async issue.
@@ -53,12 +56,14 @@ export class PageViewComponent implements OnInit {
   }
 
   saveTemplate(url, text){
+    console.log("save this: " + text);
     this.WebpageService.saveTemplate(url, text);
   }
 
   getSavedTemplates(url) {
     this.WebpageService.getSavedTemplates(url, (items) => {
-      console.log(items);
+      console.log("view items: " + items);
+      this.template = items;
     });
   }
 

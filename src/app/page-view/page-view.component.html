@@ -1,6 +1,13 @@
 <div class="page-view">
+  <h2>Custom Templates</h2>
+  <div>
+    <button type="button" id="save_template" name="save_template" (click)="saveTemplate(url, template)">Save template</button>
+  </div>
+  <textarea id="template1" name="template1">{{template}}</textarea>
+  {{template}}
+
   <h2>Page Inputs</h2>
-  <input type="button" id="edit_templates" name="edit_templates" value="edit templates">
+  <input type="button" id="save_template" name="save_template" value="Save template">
   <table>
     <tr>
       <th>Value</th>
@@ -12,6 +19,7 @@
       <td><input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}"></td>
     </tr>
   </table>
+
   <h2>Page Text Areas</h2>
   <table>
     <tr>
