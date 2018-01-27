@@ -1,34 +1,21 @@
 <div class="page-view">
-  <h2>Custom Templates</h2>
-  <div>
-    <button type="button" id="save_template" name="save_template" (click)="saveTemplate(url, template)">Save template</button>
-  </div>
-  <textarea id="template1" name="template1">{{template}}</textarea>
-  {{template}}
-
-  <h2>Page Inputs</h2>
-  <input type="button" id="save_template" name="save_template" value="Save template">
-  <table>
-    <tr>
-      <th>Value</th>
-      <th>Input</th>
-    </tr>
-    <tr *ngFor="let input of inputs">
-      <td>{{input.name}}</td>
-      <td>{{input.type}}</td>
-      <td><input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}"></td>
-    </tr>
-  </table>
 
   <h2>Page Text Areas</h2>
   <table>
     <tr>
-      <th>Value</th>
-      <th>Input</th>
+      <th>Section</th>
+      <th>Text</th>
+      <th>Apply</th>
     </tr>
     <tr *ngFor="let textarea of textareas">
       <td>{{textarea.name}}</td>
-      <td>{{textarea.id}}</td>
+      <td>
+        <textarea>{{getSavedTemplate(textarea.id)}}</textarea>
+      </td>
+      <td>
+        <input class="apply-button" type="button" value="save" (click)="saveTemplate(textarea.id, 'textarea.value')"/>
+        <input class="apply-button" type="button" value="apply"/>
+      </td>
     </tr>
   </table>
 </div>

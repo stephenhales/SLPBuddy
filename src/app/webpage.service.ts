@@ -32,6 +32,28 @@ export class WebpageService {
     });
   }
 
+  setFormTextArea(callback) {
+    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
+    chrome.tabs.executeScript({
+      //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
+      code: `
+        var htmlCollection = window.document.getElementsByTagName('textarea');
+        var inputs = Array.from(htmlCollection);
+        var items = [];
+
+        inputs.forEach(function(input) {
+          var item = (({name, id}) => ({name, id}))(input);
+          items.push(item);
+        });
+        console.log(htmlCollection);
+        console.log(items);
+        items`
+    },
+    function(result){
+      callback(result[0]);
+    });
+  }
+
   getFormInputs(callback) {
     //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
     chrome.tabs.executeScript({
@@ -69,33 +91,22 @@ export class WebpageService {
     });
   }
 
-  setBackgroundColor(color) {
-    var someVar = "";
-    var scriptBackground = 'document.body.style.backgroundColor="' + color + '";';
-
-    chrome.tabs.executeScript({
-      code:  scriptBackground
-    }, function(result){
-      console.log(result);
-    });
-  }
-
-  saveTemplate(url, text) {
+  saveTemplate(id, text) {
     var items = {};
-    items[url] = text;
+    items[id] = text;
     // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
     // optional callback since we don't need to perform any action once the
     // background color is saved.
     chrome.storage.sync.set(items);
-    console.log("saved: " + items[url]);
+    console.log("saved: " + items[id]);
   }
 
-  getSavedTemplates(url, callback) {
+  getSavedTemplates(id, callback) {
     // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
     // for chrome.runtime.lastError to ensure correctness even when the API call
     // fails.
-    chrome.storage.sync.get(url, (items) => {
-      callback(chrome.runtime.lastError ? null : items[url]);
+    chrome.storage.sync.get(id, (items) => {
+      callback(chrome.runtime.lastError ? null : items[id]);
     });
   }
 
@@ -106,7 +117,17 @@ export class WebpageService {
   //   }
   // });
 
-  //TODO
+  // setBackgroundColor(color) {
+  //   var someVar = "";
+  //   var scriptBackground = 'document.body.style.backgroundColor="' + color + '";';
+  //
+  //   chrome.tabs.executeScript({
+  //     code:  scriptBackground
+  //   }, function(result){
+  //     console.log(result);
+  //   });
+  // }
+
   // Ensure the background color is changed and saved when the dropdown
   // selection changes.
   //
