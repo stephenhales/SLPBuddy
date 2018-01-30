@@ -1,5 +1,9 @@
 <div class="page-view">
-
+  <ul>
+    <li *ng-for="#task of tasks">
+      {{ task.id }} - {{ task.description }}
+    </li>
+  </ul>
   <h2>Page Text Areas</h2>
   <table>
     <tr>
@@ -7,7 +11,7 @@
       <th>Text</th>
       <th>Apply</th>
     </tr>
-    <tr *ngFor="let textarea of textareas">
+    <tr *ngFor="#textarea of textareas">
       <td>{{textarea.name}}</td>
       <td>
         <textarea>{{getSavedTemplate(textarea.id)}}</textarea>

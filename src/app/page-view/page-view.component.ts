@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebpageService } from '../webpage.service';
-//import { Input } from '../input';
+import { MembraneService } from '../membrane.service';
 
 @Component({
   selector: 'app-page-view',
@@ -11,27 +11,26 @@ export class PageViewComponent implements OnInit {
 
   inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
   textareas: any[] = [{id: "demo id",name: "demo name"}];
-  template: string = "";
+  templates: any[] = [{id: "demo id", text: "demo text"}];
   url: string = "";
   textValue = 'initial value';
 
-  constructor(private WebpageService:WebpageService) {}
+  constructor(private WebpageService: WebpageService,
+              private MembraneService: MembraneService) {}
 
   ngOnInit() {
-    var vm = this;
-    vm.WebpageService.getCurrentTabUrl((url) => {
-      vm.url = url;
-      vm.getFormTextAreas();
-    });
+    this.getCurrentTabUrl();
+    //getFormTextAreas();
+  }
 
-    //This allows the data to appear. it seems like there is an async issue.
-    vm.delay(200);
+  getCurrentTabUrl(){
+    this.MembraneService.getCurrentTabUrl()
+    .subscribe(res => this.url = res);
   }
 
   getFormTextAreas(){
-    this.WebpageService.getFormTextAreas((textareas) => {
-      this.textareas = textareas;
-    });
+    this.MembraneService.getFormTextAreas()
+    .subscribe(res => this.textareas = res);
   }
 
   saveTemplate(id, text){
@@ -45,8 +44,13 @@ export class PageViewComponent implements OnInit {
       return item;
     });
   }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 }
+
+// export class TasksComponent {
+//   tasks: Array<Task>;
+//   constructor(public taskService: TaskService) {
+//     // now it's a simple subscription to the observable
+//     taskService.getTasks()
+//       .subscribe(res => this.tasks = res);
+//   }
+// }
