@@ -1,7 +1,21 @@
-<h2>My Inputs</h2>
-<ul class="page-view">
-  <li *ngFor="let input of inputs">
-    <span>{{input.value}} {{input.name}} {{input.type}}</span>
-    <input type="{{input.type}}" id="{{input.id}}" name="{{input.name}}" value="{{input.value}}">
-  </li>
-</ul>
+<div class="page-view">
+
+  <h2>Page Text Areas</h2>
+  <table>
+    <tr>
+      <th>Section</th>
+      <th>Text</th>
+      <th>Apply</th>
+    </tr>
+    <tr *ngFor="let textarea of textareas">
+      <td>{{textarea.name}}</td>
+      <td>
+        <textarea>{{getSavedTemplate(textarea.id)}}</textarea>
+      </td>
+      <td>
+        <input class="apply-button" type="button" value="save" (click)="saveTemplate(textarea.id, 'textarea.value')"/>
+        <input class="apply-button" type="button" value="apply"/>
+      </td>
+    </tr>
+  </table>
+</div>
