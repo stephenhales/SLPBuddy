@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebpageService } from '../webpage.service';
 import { MembraneService } from '../membrane.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-page-view',
@@ -9,28 +10,40 @@ import { MembraneService } from '../membrane.service';
 })
 export class PageViewComponent implements OnInit {
 
-  inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
-  textareas: any[] = [{id: "demo id",name: "demo name"}];
-  templates: any[] = [{id: "demo id", text: "demo text"}];
-  url: string = "";
-  textValue = 'initial value';
+  private inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
+  private textareas: any[] = [{id: "demo id",name: "demo name"}];
+  private templates: any[] = [{id: "demo id", text: "demo text"}];
+  private url: string = "";
+  private textValue = 'initial value';
+
+  private urlSubscription: Subscription;
 
   constructor(private WebpageService: WebpageService,
               private MembraneService: MembraneService) {}
 
   ngOnInit() {
     this.getCurrentTabUrl();
-    //getFormTextAreas();
+    this.getFormTextAreas();
   }
 
-  getCurrentTabUrl(){
-    this.MembraneService.getCurrentTabUrl()
-    .subscribe(res => this.url = res);
+  getCurrentTabUrl() {
+    this.MembraneService.getCurrentTabUrl().then(
+      (url: string) => {
+        console.log(url);
+        this.url = url;
+      },
+      (err) => console.log(err)
+    );
   }
 
   getFormTextAreas(){
-    this.MembraneService.getFormTextAreas()
-    .subscribe(res => this.textareas = res);
+    this.MembraneService.getFormTextAreas().then(
+      (textareas: any[]) => {
+        console.log(textareas);
+        this.textareas = textareas;
+      },
+      (err) => console.log(err)
+    );
   }
 
   saveTemplate(id, text){
@@ -43,6 +56,11 @@ export class PageViewComponent implements OnInit {
       console.log(id + ": " + item);
       return item;
     });
+  }
+  ngOnDestroy() {
+    if (this.urlSubscription) {
+      this.urlSubscription.unsubscribe();
+    }
   }
 }
 

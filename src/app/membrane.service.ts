@@ -1,10 +1,10 @@
 ///<reference path="../../node_modules/@types/chrome/index.d.ts" />
-//https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/chrome/index.d.ts
 
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from "rxjs/Subject";
 import { Http } from '@angular/http';
 import { Input } from './datatypes/input';
-import { Rx } from 'rxjs/Rx';
 
 @Injectable()
 export class MembraneService {
@@ -12,10 +12,12 @@ export class MembraneService {
   textareas: any[] = [{id: "demo id",name: "demo name"}];
   templates: any[] = [{id: "demo id", text: "demo text"}];
 
+  public $url = new Subject<any>();
+
   constructor() { }
 
   getFormTextAreas() {
-    return Rx.Observable.create(function() {
+    var promise = new Promise((resolve, reject) => {
       chrome.tabs.executeScript({
         code: `
           var htmlCollection = window.document.getElementsByTagName('textarea');
@@ -31,9 +33,10 @@ export class MembraneService {
           items`
       },
       function(result){
-        return result[0];
+        return resolve(result[0]);
       });
     });
+    return promise;
   }
 
   setFormTextArea(callback) {
@@ -57,14 +60,15 @@ export class MembraneService {
   }
 
   getCurrentTabUrl() {
-    return Rx.Observable.create(function() {
+    var promise = new Promise((resolve, reject) => {
       var queryInfo = { active: true, currentWindow: true };
       chrome.tabs.query(queryInfo, (tabs) => {
         var tab = tabs[0];
         console.assert(typeof tab.url == 'string', 'tab.url should be a string');
-        return tab.url;
+        resolve(tab.url);
       });
     });
+    return promise;
   }
 
   saveTemplate(id, text) {
