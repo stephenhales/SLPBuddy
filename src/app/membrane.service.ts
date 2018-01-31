@@ -33,7 +33,7 @@ export class MembraneService {
           items`
       },
       function(result){
-        return resolve(result[0]);
+        resolve(result[0]);
       });
     });
     return promise;
@@ -78,30 +78,12 @@ export class MembraneService {
     console.log("saved: " + items[id]);
   }
 
-  getSavedTemplates(id, callback) {
-    chrome.storage.sync.get(id, (items) => {
-      callback(chrome.runtime.lastError ? null : items[id]);
+  getSavedTemplate(id) {
+    var promise = new Promise((resolve, reject) => {
+      chrome.storage.sync.get(id, (templates) => {
+        resolve(chrome.runtime.lastError ? null : templates[id]);
+      });
     });
+    return promise;
   }
-
-  // getTasks() {
-  //   // return an observable
-  //   return this.http.get('/api/v1/tasks.json')
-  //   .map( (responseData) => {
-  //     return responseData.json();
-  //   })
-  //   .map((tasks: Array<any>) => {
-  //     let result:Array<Task> = [];
-  //     if (tasks) {
-  //       tasks.forEach((task) => {
-  //         result.push(
-  //                    new Task(task.id,
-  //                             task.description,
-  //                             task.dueDate,
-  //                             task.complete));
-  //       });
-  //     }
-  //     return result;
-  //   });
-  // }
 }

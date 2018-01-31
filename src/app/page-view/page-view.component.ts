@@ -10,11 +10,8 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PageViewComponent implements OnInit {
 
-  private inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
-  private textareas: any[] = [{id: "demo id",name: "demo name"}];
-  private templates: any[] = [{id: "demo id", text: "demo text"}];
+  private textareas: any[] = [{id: "demo id",name: "demo name", savedTemplate:""}];
   private url: string = "";
-  private textValue = 'initial value';
 
   private urlSubscription: Subscription;
 
@@ -41,6 +38,7 @@ export class PageViewComponent implements OnInit {
       (textareas: any[]) => {
         console.log(textareas);
         this.textareas = textareas;
+        this.getSavedTemplates();
       },
       (err) => console.log(err)
     );
@@ -51,16 +49,16 @@ export class PageViewComponent implements OnInit {
     this.WebpageService.saveTemplate(id, text);
   }
 
-  getSavedTemplate(id) {
-    this.WebpageService.getSavedTemplates(id, (item) => {
-      console.log(id + ": " + item);
-      return item;
+  getSavedTemplates() {
+    this.textareas.forEach((textarea) => {
+      this.MembraneService.getSavedTemplate(textarea.id).then(
+        (template: string) => {
+          textarea.savedTemplate = template;
+          console.log("saved template:" + textarea.savedTemplate);
+        },
+        (err) => console.log(err)
+      );
     });
-  }
-  ngOnDestroy() {
-    if (this.urlSubscription) {
-      this.urlSubscription.unsubscribe();
-    }
   }
 }
 
