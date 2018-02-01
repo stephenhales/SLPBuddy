@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebpageService } from '../webpage.service';
-//import { Input } from '../input';
+import { MembraneService } from '../membrane.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-page-view',
@@ -9,29 +10,38 @@ import { WebpageService } from '../webpage.service';
 })
 export class PageViewComponent implements OnInit {
 
-  inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
-  textareas: any[] = [{id: "demo id",name: "demo name"}];
-  template: string = "";
-  url: string = "";
-  textValue = 'initial value';
+  private textareas: any[] = [{id: "demo id",name: "demo name", savedTemplate:""}];
+  private url: string = "";
 
-  constructor(private WebpageService:WebpageService) {}
+  private urlSubscription: Subscription;
+
+  constructor(private WebpageService: WebpageService,
+              private MembraneService: MembraneService) {}
 
   ngOnInit() {
-    var vm = this;
-    vm.WebpageService.getCurrentTabUrl((url) => {
-      vm.url = url;
-      vm.getFormTextAreas();
-    });
+    this.getCurrentTabUrl();
+    this.getFormTextAreas();
+  }
 
-    //This allows the data to appear. it seems like there is an async issue.
-    vm.delay(200);
+  getCurrentTabUrl() {
+    this.MembraneService.getCurrentTabUrl().then(
+      (url: string) => {
+        console.log(url);
+        this.url = url;
+      },
+      (err) => console.log(err)
+    );
   }
 
   getFormTextAreas(){
-    this.WebpageService.getFormTextAreas((textareas) => {
-      this.textareas = textareas;
-    });
+    this.MembraneService.getFormTextAreas().then(
+      (textareas: any[]) => {
+        console.log(textareas);
+        this.textareas = textareas;
+        this.getSavedTemplates();
+      },
+      (err) => console.log(err)
+    );
   }
 
   saveTemplate(id, text){
@@ -39,14 +49,24 @@ export class PageViewComponent implements OnInit {
     this.WebpageService.saveTemplate(id, text);
   }
 
-  getSavedTemplate(id) {
-    this.WebpageService.getSavedTemplates(id, (item) => {
-      console.log(id + ": " + item);
-      return item;
+  getSavedTemplates() {
+    this.textareas.forEach((textarea) => {
+      this.MembraneService.getSavedTemplate(textarea.id).then(
+        (template: string) => {
+          textarea.savedTemplate = template;
+          console.log("saved template:" + textarea.savedTemplate);
+        },
+        (err) => console.log(err)
+      );
     });
   }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 }
+
+// export class TasksComponent {
+//   tasks: Array<Task>;
+//   constructor(public taskService: TaskService) {
+//     // now it's a simple subscription to the observable
+//     taskService.getTasks()
+//       .subscribe(res => this.tasks = res);
+//   }
+// }

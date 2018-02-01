@@ -1,14 +1,10 @@
 ///<reference path="../../node_modules/@types/chrome/index.d.ts" />
 
 import { Injectable } from '@angular/core';
-import { Input } from './input';
 
 @Injectable()
 export class WebpageService {
   constructor() { }
-  // Copyright (c) 2014 The Chromium Authors. All rights reserved.
-  // Use of this source code is governed by a BSD-style license that can be
-  // found in the LICENSE file.
 
   getFormTextAreas(callback) {
     //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
@@ -109,30 +105,4 @@ export class WebpageService {
       callback(chrome.runtime.lastError ? null : items[id]);
     });
   }
-
-  // this.getSavedBackgroundColor(url, (savedColor) => {
-  //   if (savedColor) {
-  //     this.changeBackgroundColor(savedColor);
-  //     //dropdown.value = savedColor;
-  //   }
-  // });
-
-  // setBackgroundColor(color) {
-  //   var someVar = "";
-  //   var scriptBackground = 'document.body.style.backgroundColor="' + color + '";';
-  //
-  //   chrome.tabs.executeScript({
-  //     code:  scriptBackground
-  //   }, function(result){
-  //     console.log(result);
-  //   });
-  // }
-
-  // Ensure the background color is changed and saved when the dropdown
-  // selection changes.
-  //
-  // dropdown.addEventListener('change', () => {
-  //   changeBackgroundColor(dropdown.value);
-  //   saveBackgroundColor(url, dropdown.value);
-  // });
 }

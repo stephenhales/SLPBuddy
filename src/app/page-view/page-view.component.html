@@ -1,5 +1,4 @@
 <div class="page-view">
-
   <h2>Page Text Areas</h2>
   <table>
     <tr>
@@ -10,7 +9,7 @@
     <tr *ngFor="let textarea of textareas">
       <td>{{textarea.name}}</td>
       <td>
-        <textarea>{{getSavedTemplate(textarea.id)}}</textarea>
+        <textarea>{{textarea.savedTemplate}}</textarea>
       </td>
       <td>
         <input class="apply-button" type="button" value="save" (click)="saveTemplate(textarea.id, 'textarea.value')"/>

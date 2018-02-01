@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { PageViewComponent } from './page-view/page-view.component';
 import { WebpageService } from './webpage.service';
-
+import { MembraneService } from './membrane.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { WebpageService } from './webpage.service';
   imports: [
     BrowserModule
   ],
-  providers: [WebpageService],
+  providers: [WebpageService, MembraneService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
