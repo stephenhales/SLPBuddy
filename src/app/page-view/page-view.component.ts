@@ -44,6 +44,10 @@ export class PageViewComponent implements OnInit {
     );
   }
 
+  saveChange(textarea){
+    this.saveTemplate(textarea.id, textarea.savedTemplate);
+  }
+
   saveTemplate(id, text){
     console.log("save this: " + text);
     this.WebpageService.saveTemplate(id, text);
@@ -61,12 +65,3 @@ export class PageViewComponent implements OnInit {
     });
   }
 }
-
-// export class TasksComponent {
-//   tasks: Array<Task>;
-//   constructor(public taskService: TaskService) {
-//     // now it's a simple subscription to the observable
-//     taskService.getTasks()
-//       .subscribe(res => this.tasks = res);
-//   }
-// }

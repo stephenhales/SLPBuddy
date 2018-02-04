@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { PageViewComponent } from './page-view/page-view.component';
@@ -12,7 +13,8 @@ import { MembraneService } from './membrane.service';
     PageViewComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [WebpageService, MembraneService],
   bootstrap: [AppComponent]

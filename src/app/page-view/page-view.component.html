@@ -9,10 +9,11 @@
     <tr *ngFor="let textarea of textareas">
       <td>{{textarea.name}}</td>
       <td>
-        <textarea>{{textarea.savedTemplate}}</textarea>
+        <textarea placeholder="Enter a template"
+        (change)="saveChange(textarea)"
+        [(ngModel)]="textarea.savedTemplate"></textarea>
       </td>
       <td>
-        <input class="apply-button" type="button" value="save" (click)="saveTemplate(textarea.id, 'textarea.value')"/>
         <input class="apply-button" type="button" value="apply"/>
       </td>
     </tr>
