@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { PageViewComponent } from './page-view/page-view.component';
 import { WebpageService } from './webpage.service';
-import { MembraneService } from './membrane.service';
 
 @NgModule({
   declarations: [
@@ -16,7 +15,7 @@ import { MembraneService } from './membrane.service';
     BrowserModule,
     FormsModule
   ],
-  providers: [WebpageService, MembraneService],
+  providers: [WebpageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

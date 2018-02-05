@@ -1,108 +1,85 @@
 ///<reference path="../../node_modules/@types/chrome/index.d.ts" />
 
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from "rxjs/Subject";
+import { Http } from '@angular/http';
+import { Input } from './datatypes/input';
 
 @Injectable()
 export class WebpageService {
+  inputs: any[] = [{id: "demo id",name: "demo name",value: "demo value",type: "checkbox"}];
+  textareas: any[] = [{id: "demo id",name: "demo name"}];
+  templates: any[] = [{id: "demo id", text: "demo text"}];
+
+  public $url = new Subject<any>();
+
   constructor() { }
 
-  getFormTextAreas(callback) {
-    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    chrome.tabs.executeScript({
-      //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
-      code: `
-        var htmlCollection = window.document.getElementsByTagName('textarea');
-        var inputs = Array.from(htmlCollection);
-        var items = [];
+  getFormTextAreas() {
+    var promise = new Promise((resolve, reject) => {
+      chrome.tabs.executeScript({
+        code: `
+          var htmlCollection = window.document.getElementsByTagName('textarea');
+          var inputs = Array.from(htmlCollection);
+          var items = [];
 
-        inputs.forEach(function(input) {
-          var item = (({name, id}) => ({name, id}))(input);
-          items.push(item);
-        });
-        console.log(htmlCollection);
-        console.log(items);
-        items`
-    },
-    function(result){
-      callback(result[0]);
+          inputs.forEach(function(input) {
+            var item = (({name, id}) => ({name, id}))(input);
+            items.push(item);
+          });
+          console.log(htmlCollection);
+          console.log(items);
+          items`
+      },
+      function(result){
+        resolve(result[0]);
+      });
     });
+    return promise;
   }
 
-  setFormTextArea(callback) {
-    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    chrome.tabs.executeScript({
-      //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
-      code: `
-        var htmlCollection = window.document.getElementsByTagName('textarea');
-        var inputs = Array.from(htmlCollection);
-        var items = [];
-
-        inputs.forEach(function(input) {
-          var item = (({name, id}) => ({name, id}))(input);
-          items.push(item);
-        });
-        console.log(htmlCollection);
-        console.log(items);
-        items`
-    },
-    function(result){
-      callback(result[0]);
+  setFormTextArea(id, text) {
+    console.log(id+ ": " + text);
+    var promise = new Promise((resolve, reject) => {
+      var editText = text.replace('"','\"');
+      editText = editText.replace("'",'\'');
+      var code = 'window.document.getElementById("'+id+'").value="' + editText + '";';
+      chrome.tabs.executeScript({
+        code: code
+      },
+      function(result){
+        resolve(result[0]);
+      });
     });
+    return promise;
   }
 
-  getFormInputs(callback) {
-    //var framePath = 'window.frames[1].document.frames[1].document.frames[1].'
-    chrome.tabs.executeScript({
-      //change to use file https://developer.chrome.com/extensions/tabs#method-executeScript
-      code: `
-        var htmlCollection = window.document.getElementsByTagName('input');
-        var inputs = Array.from(htmlCollection);
-        var items = [];
-
-        inputs.forEach(function(input) {
-          var item = (({name, id, value, type}) => ({name, id, value, type}))(input);
-          items.push(item);
-        });
-        console.log(htmlCollection);
-        console.log(items);
-        items`
-    },
-    function(result){
-      callback(result[0]);
+  getCurrentTabUrl() {
+    var promise = new Promise((resolve, reject) => {
+      var queryInfo = { active: true, currentWindow: true };
+      chrome.tabs.query(queryInfo, (tabs) => {
+        var tab = tabs[0];
+        console.assert(typeof tab.url == 'string', 'tab.url should be a string');
+        resolve(tab.url);
+      });
     });
-  }
-
-  getCurrentTabUrl(callback) {
-    // https://developer.chrome.com/extensions/tabs#method-query
-    var queryInfo = {
-      active: true,
-      currentWindow: true
-    };
-
-    chrome.tabs.query(queryInfo, (tabs) => {
-      var tab = tabs[0];
-      var url = tab.url;
-      console.assert(typeof url == 'string', 'tab.url should be a string');
-      callback(url);
-    });
+    return promise;
   }
 
   saveTemplate(id, text) {
     var items = {};
     items[id] = text;
-    // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
-    // optional callback since we don't need to perform any action once the
-    // background color is saved.
     chrome.storage.sync.set(items);
     console.log("saved: " + items[id]);
   }
 
-  getSavedTemplates(id, callback) {
-    // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-    // for chrome.runtime.lastError to ensure correctness even when the API call
-    // fails.
-    chrome.storage.sync.get(id, (items) => {
-      callback(chrome.runtime.lastError ? null : items[id]);
+  getSavedTemplate(id) {
+    var promise = new Promise((resolve, reject) => {
+      chrome.storage.sync.get(id, (templates) => {
+        resolve(chrome.runtime.lastError ? null : templates[id]);
+      });
     });
+    return promise;
   }
 }
