@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { WebpageService } from '../webpage.service';
-import { MembraneService } from '../membrane.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -15,8 +14,7 @@ export class PageViewComponent implements OnInit {
 
   private urlSubscription: Subscription;
 
-  constructor(private WebpageService: WebpageService,
-              private MembraneService: MembraneService) {}
+  constructor(private WebpageService: WebpageService) {}
 
   ngOnInit() {
     this.getCurrentTabUrl();
@@ -24,7 +22,7 @@ export class PageViewComponent implements OnInit {
   }
 
   getCurrentTabUrl() {
-    this.MembraneService.getCurrentTabUrl().then(
+    this.WebpageService.getCurrentTabUrl().then(
       (url: string) => {
         console.log(url);
         this.url = url;
@@ -34,7 +32,7 @@ export class PageViewComponent implements OnInit {
   }
 
   getFormTextAreas(){
-    this.MembraneService.getFormTextAreas().then(
+    this.WebpageService.getFormTextAreas().then(
       (textareas: any[]) => {
         console.log(textareas);
         this.textareas = textareas;
@@ -44,29 +42,30 @@ export class PageViewComponent implements OnInit {
     );
   }
 
+  saveChange(textarea){
+    console.log("save: " + textarea.text);
+    this.saveTemplate(textarea.id, textarea.text);
+  }
+
   saveTemplate(id, text){
-    console.log("save this: " + text);
+    console.log("save: " + text);
     this.WebpageService.saveTemplate(id, text);
   }
 
   getSavedTemplates() {
     this.textareas.forEach((textarea) => {
-      this.MembraneService.getSavedTemplate(textarea.id).then(
+      this.WebpageService.getSavedTemplate(textarea.id).then(
         (template: string) => {
-          textarea.savedTemplate = template;
-          console.log("saved template:" + textarea.savedTemplate);
+          textarea.text = template;
+          console.log("saved template:" + textarea.text);
         },
         (err) => console.log(err)
       );
     });
   }
-}
 
-// export class TasksComponent {
-//   tasks: Array<Task>;
-//   constructor(public taskService: TaskService) {
-//     // now it's a simple subscription to the observable
-//     taskService.getTasks()
-//       .subscribe(res => this.tasks = res);
-//   }
-// }
+  applyTemplate(textarea){
+    console.log("apply: " + textarea.text);
+    this.WebpageService.setFormTextArea(textarea.id, textarea.text);
+  }
+}
